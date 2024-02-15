@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TableMySQL</name>
+    </assembly>
+    <members>
+        <member name="T:TableMySQL.MyConnectionString">
+            <summary>
+            Represents a custom connection string for MySQL database, containing server, user credentials, and database information.
+            </summary>
+        </member>
+        <member name="P:TableMySQL.MyConnectionString.Server">
+            <summary>
+            Gets or sets the server address for the database connection.
+            </summary>
+        </member>
+        <member name="P:TableMySQL.MyConnectionString.User">
+            <summary>
+            Gets or sets the username for database access.
+            </summary>
+        </member>
+        <member name="P:TableMySQL.MyConnectionString.Password">
+            <summary>
+            Gets or sets the password for database access.
+            </summary>
+        </member>
+        <member name="P:TableMySQL.MyConnectionString.Database">
+            <summary>
+            Gets or sets the name of the database to connect to.
+            </summary>
+        </member>
+        <member name="M:TableMySQL.MyConnectionString.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the MyConnectionString class with the specified server, user, password, and database.
+            </summary>
+            <param name="server">The server address of the MySQL database.</param>
+            <param name="user">The username for database access.</param>
+            <param name="password">The password for database access.</param>
+            <param name="database">The name of the database to connect to.</param>
+        </member>
+        <member name="M:TableMySQL.MyConnectionString.Get">
+            <summary>
+            Retrieves the constructed connection string based on the provided server, user, password, and database.
+            </summary>
+            <returns>The constructed connection string for MySQL database.</returns>
+        </member>
+        <member name="T:TableMySQL.TableHandlerMySQL">
+            <summary>
+            Provides methods for working with tables in MySQL and displaying results in RichTextBox and DataGridView controls.
+            </summary>
+        </member>
+        <member name="M:TableMySQL.TableHandlerMySQL.Good(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.String)">
+            <summary>
+            Displays a success message in the specified RichTextBox control and focuses on the main window.
+            </summary>
+            <param name="richTextBox">The RichTextBox control to display the message in.</param>
+            <param name="mainTextBox">The main RichTextBox control.</param>
+            <param name="text">The text of the success message.</param>
+        </member>
+        <member name="M:TableMySQL.TableHandlerMySQL.Bad(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.String,System.String)">
+            <summary>
+            Displays an error message in the specified RichTextBox control and focuses on the main window.
+            </summary>
+            <param name="richTextBox">The RichTextBox control to display the message in.</param>
+            <param name="mainTextBox">The main RichTextBox control.</param>
+            <param name="text">The text of the error message.</param>
+            <param name="code">The error code (default is "none code").</param>
+        </member>
+        <member name="M:TableMySQL.TableHandlerMySQL.SqlReadInTable(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.Windows.Forms.DataGridView@,System.Windows.Forms.DataGridViewAutoSizeColumnMode,System.String,System.String)">
+            <summary>
+            Executes an SQL query to read data from a MySQL table and displays the result in a DataGridView control.
+            </summary>
+            <param name="richTextBox">The RichTextBox control to output information about the query.</param>
+            <param name="mainTextBox">The main RichTextBox control.</param>
+            <param name="table">The DataGridView control to display the query results.</param>
+            <param name="mode">The auto-size mode for columns in the DataGridView.</param>
+            <param name="connectionString">The connection string to the database.</param>
+            <param name="query">The SQL query (default is "show databases").</param>
+        </member>
+        <member name="M:TableMySQL.TableHandlerMySQL.NoLogSqlReadInTable(System.Windows.Forms.DataGridView@,System.Windows.Forms.DataGridViewAutoSizeColumnMode,System.String,System.String)">
+            <summary>
+            Populates a DataGridView control with data from a SQL query without logging, using the specified connection string.
+            </summary>
+            <param name="table">The DataGridView control to be populated with data.</param>
+            <param name="mode">The DataGridViewAutoSizeColumnMode to be applied.</param>
+            <param name="connectionString">The connection string for accessing the database.</param>
+            <param name="query">The SQL query to retrieve data (default is "show databases").</param>
+        </member>
+        <member name="T:TableMySQL.OtherHandlerMySQL">
+            <summary>
+            Provides methods for handling database operations related to MySQL, including sending requests, testing connections, and connecting to databases.
+            </summary>
+        </member>
+        <member name="M:TableMySQL.OtherHandlerMySQL.SendRequest(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.String,System.String@)">
+            <summary>
+            Sends a SQL request to the MySQL database and handles the response.
+            </summary>
+            <param name="richTextBox">The RichTextBox control for displaying information about the request.</param>
+            <param name="mainTextBox">The main RichTextBox control.</param>
+            <param name="connectionString">The connection string to the database.</param>
+            <param name="query">The SQL query to be executed.</param>
+        </member>
+        <member name="M:TableMySQL.OtherHandlerMySQL.TestConnection(System.String)">
+            <summary>
+            Tests the connection to the MySQL database using the specified connection string.
+            </summary>
+            <param name="connectionStr">The connection string to be tested.</param>
+        </member>
+        <member name="M:TableMySQL.OtherHandlerMySQL.ConnectDatabase(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,TableMySQL.MyConnectionString@,System.String)">
+            <summary>
+            Connects to the specified MySQL database using the provided connection string and handles success or failure.
+            </summary>
+            <param name="richTextBox">The RichTextBox control for displaying information about the connection status.</param>
+            <param name="mainTextBox">The main RichTextBox control.</param>
+            <param name="connectionString">The original connection string.</param>
+            <param name="database">The name of the database to connect to.</param>
+        </member>
+        <member name="T:TableMySQL.ThisHandlerMySQL">
+            <summary>
+            Provides methods for handling database operations related to MySQL, including displaying messages in a RichTextBox control and executing SQL queries.
+            </summary>
+        </member>
+        <member name="M:TableMySQL.ThisHandlerMySQL.#ctor(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,TableMySQL.MyConnectionString)">
+            <summary>
+            Initializes a new instance of the ThisHandlerMySQL class with the specified RichTextBox controls and connection string.
+            </summary>
+            <param name="richTextBox">The RichTextBox control for displaying information.</param>
+            <param name="mainTextBox">The main RichTextBox control.</param>
+            <param name="connectionString">The connection string to the database.</param>
+        </member>
+        <member name="M:TableMySQL.ThisHandlerMySQL.Good(System.String)">
+            <summary>
+            Displays a success message in the RichTextBox control with green text color.
+            </summary>
+            <param name="text">The text of the success message.</param>
+        </member>
+        <member name="M:TableMySQL.ThisHandlerMySQL.Bad(System.String,System.String)">
+            <summary>
+            Displays an error message in the RichTextBox control with red text color and an optional error code.
+            </summary>
+            <param name="text">The text of the error message.</param>
+            <param name="code">The error code (default is "none code").</param>
+        </member>
+        <member name="M:TableMySQL.ThisHandlerMySQL.SqlReadInTable(System.Windows.Forms.DataGridView@,System.Windows.Forms.DataGridViewAutoSizeColumnMode,System.String)">
+            <summary>
+            Executes an SQL query to read data from a MySQL table and displays the result in a DataGridView control.
+            </summary>
+            <param name="table">The DataGridView control to display the query results.</param>
+            <param name="mode">The auto-size mode for columns in the DataGridView.</param>
+            <param name="query">The SQL query to be executed (default is "show databases").</param>
+        </member>
+        <member name="M:TableMySQL.ThisHandlerMySQL.SendRequest(System.String)">
+            <summary>
+            Sends an SQL request to the MySQL database using the current connection string and handles success or failure.
+            </summary>
+            <param name="query">The SQL query to be executed.</param>
+        </member>
+        <member name="M:TableMySQL.ThisHandlerMySQL.TestConnection(System.String)">
+            <summary>
+            Tests the connection to the MySQL database using the specified connection string.
+            </summary>
+            <param name="connectionStr">The connection string to be tested.</param>
+        </member>
+        <member name="M:TableMySQL.ThisHandlerMySQL.ConnectDatabase(System.String)">
+            <summary>
+            Connects to the specified MySQL database using the provided database name and handles success or failure.
+            </summary>
+            <param name="database">The name of the database to connect to.</param>
+        </member>
+    </members>
+</doc>
