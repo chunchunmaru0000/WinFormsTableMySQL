@@ -100,6 +100,13 @@
             <param name="connectionString">The connection string to the database.</param>
             <param name="query">The SQL query to be executed.</param>
         </member>
+        <member name="M:TableMySQL.OtherHandlerMySQL.NoLogSendRequest(System.String,System.String)">
+            <summary>
+            Sends a SQL request to the MySQL database without logging.
+            </summary>
+            <param name="connectionString">The connection string to the database.</param>
+            <param name="query">The SQL query to be executed.</param>
+        </member>
         <member name="M:TableMySQL.OtherHandlerMySQL.TestConnection(System.String)">
             <summary>
             Tests the connection to the MySQL database using the specified connection string.
@@ -118,6 +125,21 @@
         <member name="T:TableMySQL.ThisHandlerMySQL">
             <summary>
             Provides methods for handling database operations related to MySQL, including displaying messages in a RichTextBox control and executing SQL queries.
+            </summary>
+        </member>
+        <member name="F:TableMySQL.ThisHandlerMySQL.RichTextBox">
+            <summary>
+            Box for logging
+            </summary>
+        </member>
+        <member name="F:TableMySQL.ThisHandlerMySQL.MainTextBox">
+            <summary>
+            Box for code of you
+            </summary>
+        </member>
+        <member name="F:TableMySQL.ThisHandlerMySQL.ConnectionString">
+            <summary>
+            String for connection
             </summary>
         </member>
         <member name="M:TableMySQL.ThisHandlerMySQL.#ctor(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,TableMySQL.MyConnectionString)">

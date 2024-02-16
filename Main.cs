@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Relational;
 
 namespace TableMySQL
 {
@@ -194,7 +195,7 @@ namespace TableMySQL
         /// <param name="mainTextBox">The main RichTextBox control.</param>
         /// <param name="connectionString">The connection string to the database.</param>
         /// <param name="query">The SQL query to be executed.</param>
-        static void SendRequest(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, string connectionString, string query)
+        public static void SendRequest(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, string connectionString, string query)
         {
             query = query.Replace('\n', ' ');
             if (!string.IsNullOrWhiteSpace(query))
@@ -215,6 +216,17 @@ namespace TableMySQL
             else
                 TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, "Empty query", query);
             }
+
+        /// <summary>
+        /// Sends a SQL request to the MySQL database without logging.
+        /// </summary>
+        /// <param name="connectionString">The connection string to the database.</param>
+        /// <param name="query">The SQL query to be executed.</param>
+        public static void NoLogSendRequest(string connectionString, string query)
+        {
+            var _0 = new RichTextBox();
+            SendRequest(ref _0, ref _0, connectionString, query);
+        }
 
         /// <summary>
         /// Tests the connection to the MySQL database using the specified connection string.
@@ -272,9 +284,20 @@ namespace TableMySQL
     /// </summary>
     public class ThisHandlerMySQL
     {
-        private RichTextBox richTextBox;
-        private RichTextBox mainTextBox;
-        private MyConnectionString connectionString;
+        /// <summary>
+        /// Box for logging
+        /// </summary>
+        public RichTextBox RichTextBox;
+
+        /// <summary>
+        /// Box for code of you
+        /// </summary>
+        public RichTextBox MainTextBox;
+
+        /// <summary>
+        /// String for connection
+        /// </summary>
+        public MyConnectionString ConnectionString;
 
         /// <summary>
         /// Initializes a new instance of the ThisHandlerMySQL class with the specified RichTextBox controls and connection string.
@@ -284,9 +307,9 @@ namespace TableMySQL
         /// <param name="connectionString">The connection string to the database.</param>
         public ThisHandlerMySQL(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, MyConnectionString connectionString)
         {
-            this.richTextBox = richTextBox;
-            this.mainTextBox = mainTextBox;
-            this.connectionString = connectionString;
+            RichTextBox = richTextBox;
+            MainTextBox = mainTextBox;
+            ConnectionString = connectionString;
         }
 
         /// <summary>
@@ -295,10 +318,10 @@ namespace TableMySQL
         /// <param name="text">The text of the success message.</param>
         public void Good(string text)
         {
-            richTextBox.SelectionColor = Color.Green;
-            richTextBox.AppendText("success: " + text + "\n");
-            richTextBox.Focus();
-            mainTextBox.Focus();
+            RichTextBox.SelectionColor = Color.Green;
+            RichTextBox.AppendText("success: " + text + "\n");
+            RichTextBox.Focus();
+            MainTextBox.Focus();
         }
 
         /// <summary>
@@ -308,10 +331,10 @@ namespace TableMySQL
         /// <param name="code">The error code (default is "none code").</param>
         public void Bad(string text, string code = "none code")
         {
-            richTextBox.SelectionColor = Color.Red;
-            richTextBox.AppendText($"error code: {code}\n{text}\n");
-            richTextBox.Focus();
-            mainTextBox.Focus();
+            RichTextBox.SelectionColor = Color.Red;
+            RichTextBox.AppendText($"error code: {code}\n{text}\n");
+            RichTextBox.Focus();
+            MainTextBox.Focus();
         }
 
         /// <summary>
@@ -325,7 +348,7 @@ namespace TableMySQL
             List<string> output = new List<string>();
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(connectionString.Get()))
+                using (MySqlConnection connection = new MySqlConnection(ConnectionString.Get()))
                 {
                     connection.Open();
                     MySqlCommand command = new MySqlCommand(table ? $"show columns from {text}" : text, connection);
@@ -375,7 +398,7 @@ namespace TableMySQL
             query = query.Replace('\n', ' ');
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(connectionString.Get()))
+                using (MySqlConnection connection = new MySqlConnection(ConnectionString.Get()))
                 {
                     connection.Open();
                     using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -469,7 +492,7 @@ namespace TableMySQL
             {
                 try
                 {
-                    MySqlConnection connection = new MySqlConnection(connectionString.Get());
+                    MySqlConnection connection = new MySqlConnection(ConnectionString.Get());
                     connection.Open();
                     using (var command = new MySqlCommand(query, connection))
                     {
@@ -518,21 +541,21 @@ namespace TableMySQL
                 }
             }
             var oldconnstr = new MyConnectionString(
-                connectionString.Server,
-                connectionString.User,
-                connectionString.Password,
-                connectionString.Database
+                ConnectionString.Server,
+                ConnectionString.User,
+                ConnectionString.Password,
+                ConnectionString.Database
                 );
             try
             {
-                connectionString.Database = database;
-                TestConnection(connectionString.Get());
-                TableHandlerMySQL.Good(ref richTextBox, ref mainTextBox, "use " + database);
+                ConnectionString.Database = database;
+                TestConnection(ConnectionString.Get());
+                TableHandlerMySQL.Good(ref RichTextBox, ref MainTextBox, "use " + database);
             }
             catch (MySqlException error)
             {
-                connectionString = oldconnstr;
-                TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, error.ToString(), "use " + database);
+                ConnectionString = oldconnstr;
+                TableHandlerMySQL.Bad(ref RichTextBox, ref MainTextBox, error.ToString(), "use " + database);
             }
         }
     }
