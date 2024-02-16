@@ -113,7 +113,7 @@
             <param name="richTextBox">The RichTextBox control for displaying information about the connection status.</param>
             <param name="mainTextBox">The main RichTextBox control.</param>
             <param name="connectionString">The original connection string.</param>
-            <param name="database">The name of the database to connect to.</param>
+            <param name="query">Contains the name of the database to connect to.</param>
         </member>
         <member name="T:TableMySQL.ThisHandlerMySQL">
             <summary>
@@ -141,13 +141,30 @@
             <param name="text">The text of the error message.</param>
             <param name="code">The error code (default is "none code").</param>
         </member>
-        <member name="M:TableMySQL.ThisHandlerMySQL.SqlReadInTable(System.Windows.Forms.DataGridView@,System.Windows.Forms.DataGridViewAutoSizeColumnMode,System.String)">
+        <member name="M:TableMySQL.ThisHandlerMySQL.GetFirstColumnAsArray(System.String,System.Boolean)">
+            <summary>
+            Retrieves the first column of a specified table or query as an array of strings.
+            </summary>
+            <param name="text">Table name or query</param>
+            <param name="table">Determines whether the 'text' parameter is just the name of the table or the entire query</param>
+            <returns>An array of strings representing the first column of the specified table or query</returns>
+        </member>
+        <member name="M:TableMySQL.ThisHandlerMySQL.CreateContextFirstColumn(System.String,System.Boolean)">
+            <summary>
+            Creates a context menu strip based on the first column of the specified table.
+            </summary>
+            <param name="table">Name of the table</param>
+            /// <param name="tabled">Determines whether the 'text' parameter is just the name of the table or the entire query</param>
+            <returns>The created ContextMenuStrip</returns>
+        </member>
+        <member name="M:TableMySQL.ThisHandlerMySQL.SqlReadInTable(System.Windows.Forms.DataGridView@,System.Windows.Forms.DataGridViewAutoSizeColumnMode,System.String,System.Boolean)">
             <summary>
             Executes an SQL query to read data from a MySQL table and displays the result in a DataGridView control.
             </summary>
             <param name="table">The DataGridView control to display the query results.</param>
             <param name="mode">The auto-size mode for columns in the DataGridView.</param>
             <param name="query">The SQL query to be executed (default is "show databases").</param>
+            <param name="columned">Determines if grid table row will have ContextMenuStrip with is SQL table columns</param>
         </member>
         <member name="M:TableMySQL.ThisHandlerMySQL.SendRequest(System.String)">
             <summary>

@@ -5,8 +5,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
@@ -231,7 +233,7 @@ namespace TableMySQL
         /// <param name="richTextBox">The RichTextBox control for displaying information about the connection status.</param>
         /// <param name="mainTextBox">The main RichTextBox control.</param>
         /// <param name="connectionString">The original connection string.</param>
-        /// <param name="database">The name of the database to connect to.</param>
+        /// <param name="query">Contains the name of the database to connect to.</param>
         public static void ConnectDatabase(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, ref MyConnectionString connectionString, string query)
         {
             query = query.Replace('\n', ' ');
@@ -313,12 +315,62 @@ namespace TableMySQL
         }
 
         /// <summary>
+        /// Retrieves the first column of a specified table or query as an array of strings.
+        /// </summary>
+        /// <param name="text">Table name or query</param>
+        /// <param name="table">Determines whether the 'text' parameter is just the name of the table or the entire query</param>
+        /// <returns>An array of strings representing the first column of the specified table or query</returns>
+        public string[] GetFirstColumnAsArray(string text, bool table = true)
+        {
+            List<string> output = new List<string>();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString.Get()))
+                {
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand(table ? $"show columns from {text}" : text, connection);
+                    MySqlDataReader reader = command.ExecuteReader();
+                    reader.Read();
+                    short i = 0;
+                    while (true)
+                    {
+                        try
+                        {
+                            output.Add(reader.GetName(i));
+                            i++;
+                        }
+                        catch (Exception) { break; }
+                    }
+                    reader.Close();
+                    connection.Close();
+                } 
+            }
+            catch (Exception error) { Console.WriteLine(error); /* for why? */ }
+            return output.ToArray();
+        }
+
+        /// <summary>
+        /// Creates a context menu strip based on the first column of the specified table.
+        /// </summary>
+        /// <param name="table">Name of the table</param>
+        /// /// <param name="tabled">Determines whether the 'text' parameter is just the name of the table or the entire query</param>
+        /// <returns>The created ContextMenuStrip</returns>
+        public ContextMenuStrip CreateContextFirstColumn(string table, bool tabled = true)
+        {
+            var context = new ContextMenuStrip();
+            var firstCollumn = GetFirstColumnAsArray(table, tabled).Select(item => new ToolStripMenuItem() { Text = item }).ToArray();
+            context.Items.AddRange(firstCollumn);
+            return context;
+        }
+
+        /// <summary>
         /// Executes an SQL query to read data from a MySQL table and displays the result in a DataGridView control.
         /// </summary>
         /// <param name="table">The DataGridView control to display the query results.</param>
         /// <param name="mode">The auto-size mode for columns in the DataGridView.</param>
         /// <param name="query">The SQL query to be executed (default is "show databases").</param>
-        public void SqlReadInTable(ref DataGridView table, DataGridViewAutoSizeColumnMode mode, string query = "show databases")
+        /// <param name="columned">Determines if grid table row will have ContextMenuStrip with is SQL table columns</param>
+        public void SqlReadInTable(ref DataGridView table, DataGridViewAutoSizeColumnMode mode, string query = "show databases", bool columned = false)
         {
             query = query.Replace('\n', ' ');
             try
@@ -332,7 +384,7 @@ namespace TableMySQL
                         {
                             table.Columns.Clear();
 
-                            List<string> colls = new List<string>();
+                            List<string> cols = new List<string>();
                             short readings = 0;
 
                             while (reader.Read())
@@ -344,13 +396,14 @@ namespace TableMySQL
                                     {
                                         try
                                         {
-                                            colls.Add(reader.GetName(i));
-                                            var coll = new DataGridViewTextBoxColumn()
+                                            cols.Add(reader.GetName(i));
+                                            
+                                            var col = new DataGridViewTextBoxColumn()
                                             {
-                                                HeaderText = colls.Last(),
-                                                AutoSizeMode = mode
+                                                HeaderText = cols.Last(),
+                                                AutoSizeMode = mode,
                                             };
-                                            table.Columns.Add(coll);
+                                            table.Columns.Add(col);
                                         }
                                         catch (Exception) { break; }
                                         i++;
@@ -359,12 +412,41 @@ namespace TableMySQL
                                 readings++;
                                 if (readings == short.MaxValue) break;
 
-                                List<string> datas = new List<string>();
-                                foreach (string coll in colls)
+                                
+                                /* lame
+                                if (columned && readings % 2 == 1 && readings > 1)
                                 {
-                                    datas.Add(reader[coll].ToString());
+                                    var context = CreateContextFirstColumn(reader[cols[0]].ToString(), true);
+                                    //context.MouseDown += (sender, e) => { context.Show(); };
+                                    var row = new DataGridViewRow()
+                                    {
+                                        ReadOnly = !columned,
+                                        ContextMenuStrip = context
+                                    };
+                                    row.Cells[cols[0]].Value = reader[cols[0]].ToString();
+                                    //row.CreateCells();
+                                    //row.Rows.Add(reader[cols[0]].ToString());
+                                    //table.CurrentRow.CreateCells(row);
+                                    table.Rows.Add(row);
+
+                                    table.MouseDown += (sender, e) => 
+                                    { 
+                                        if (e.Button == MouseButtons.Right)
+                                        {
+                                            //var hit = table.HitTest(e.X, e.Y);
+                                            context.Show(Cursor.Position);
+                                        }
+                                    };
                                 }
-                                table.Rows.Add(datas.ToArray());
+                                else
+                                */
+            //    ?????                DataGridViewButtonCell
+                                {
+                                    List<string> datas = new List<string>();
+                                    foreach (var col in cols)
+                                            datas.Add(reader[col].ToString());
+                                    table.Rows.Add(datas.ToArray());
+                                }
                             }
                         }
                     }
@@ -420,6 +502,7 @@ namespace TableMySQL
         public void ConnectDatabase(string query)
         {
             query = query.Replace('\n', ' ');
+
             string database = "";
             byte words = 0;
             foreach (string word in query.Split())
@@ -427,7 +510,11 @@ namespace TableMySQL
                 if (!string.IsNullOrEmpty(word))
                 {
                     words++;
-                    database = word;
+                    if (words == 2)
+                    {
+                        database = word;
+                        break;
+                    }
                 }
             }
             var oldconnstr = new MyConnectionString(
