@@ -109,6 +109,7 @@ namespace TableMySQL
                                           ref DataGridView table, DataGridViewAutoSizeColumnMode mode,
                                           string connectionString ,string query = "show databases")
         {
+            query = query.Replace('\n', ' ');
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -191,21 +192,27 @@ namespace TableMySQL
         /// <param name="mainTextBox">The main RichTextBox control.</param>
         /// <param name="connectionString">The connection string to the database.</param>
         /// <param name="query">The SQL query to be executed.</param>
-        static void SendRequest(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, string connectionString, ref string query)
+        static void SendRequest(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, string connectionString, string query)
         {
-            try
+            query = query.Replace('\n', ' ');
+            if (!string.IsNullOrWhiteSpace(query))
             {
-                 MySqlConnection connection = new MySqlConnection(connectionString);
-                 connection.Open();
-                 using (var command = new MySqlCommand(query, connection))
-                 {
-                     command.ExecuteNonQuery();
-                 }
-                 connection.Close();
-                 TableHandlerMySQL.Good(ref richTextBox, ref mainTextBox, query);
+                try
+                {
+                    MySqlConnection connection = new MySqlConnection(connectionString);
+                    connection.Open();
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                    TableHandlerMySQL.Good(ref richTextBox, ref mainTextBox, query);
+                }
+                catch (MySqlException error) { TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, error.ToString(), query); }
             }
-            catch (MySqlException error) { TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, error.ToString(), query); }
-        }
+            else
+                TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, "Empty query", query);
+            }
 
         /// <summary>
         /// Tests the connection to the MySQL database using the specified connection string.
@@ -227,6 +234,7 @@ namespace TableMySQL
         /// <param name="database">The name of the database to connect to.</param>
         public static void ConnectDatabase(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, ref MyConnectionString connectionString, string query)
         {
+            query = query.Replace('\n', ' ');
             string database = "";
             byte words = 0;
             foreach (string word in query.Split())
@@ -312,6 +320,7 @@ namespace TableMySQL
         /// <param name="query">The SQL query to be executed (default is "show databases").</param>
         public void SqlReadInTable(ref DataGridView table, DataGridViewAutoSizeColumnMode mode, string query = "show databases")
         {
+            query = query.Replace('\n', ' ');
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString.Get()))
@@ -373,7 +382,8 @@ namespace TableMySQL
         /// <param name="query">The SQL query to be executed.</param>
         public void SendRequest(string query)
         {
-            if (!(query.Any(c => c != '\0' && c != '\n') || string.IsNullOrEmpty(query)))
+            query = query.Replace('\n', ' ');
+            if (!string.IsNullOrWhiteSpace(query))
             {
                 try
                 {
@@ -389,9 +399,7 @@ namespace TableMySQL
                 catch (MySqlException error) { Bad(error.ToString(), query); }
             }
             else
-            {
                 Bad("Empty query", query);
-            }
         }
 
         /// <summary>
@@ -411,6 +419,7 @@ namespace TableMySQL
         /// <param name="query">The input string containing the database name.</param>
         public void ConnectDatabase(string query)
         {
+            query = query.Replace('\n', ' ');
             string database = "";
             byte words = 0;
             foreach (string word in query.Split())

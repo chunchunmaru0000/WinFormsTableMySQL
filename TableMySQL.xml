@@ -91,7 +91,7 @@
             Provides methods for handling database operations related to MySQL, including sending requests, testing connections, and connecting to databases.
             </summary>
         </member>
-        <member name="M:TableMySQL.OtherHandlerMySQL.SendRequest(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.String,System.String@)">
+        <member name="M:TableMySQL.OtherHandlerMySQL.SendRequest(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.String,System.String)">
             <summary>
             Sends a SQL request to the MySQL database and handles the response.
             </summary>
