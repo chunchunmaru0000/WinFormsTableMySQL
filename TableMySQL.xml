@@ -57,7 +57,7 @@
             <param name="mainTextBox">The main RichTextBox control.</param>
             <param name="text">The text of the success message.</param>
         </member>
-        <member name="M:TableMySQL.TableHandlerMySQL.Bad(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.String,System.String)">
+        <member name="M:TableMySQL.TableHandlerMySQL.Bad(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.String,System.String,System.Boolean)">
             <summary>
             Displays an error message in the specified RichTextBox control and focuses on the main window.
             </summary>
@@ -65,8 +65,9 @@
             <param name="mainTextBox">The main RichTextBox control.</param>
             <param name="text">The text of the error message.</param>
             <param name="code">The error code (default is "none code").</param>
+            <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         </member>
-        <member name="M:TableMySQL.TableHandlerMySQL.SqlReadInTable(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.Windows.Forms.DataGridView@,System.Windows.Forms.DataGridViewAutoSizeColumnMode,System.String,System.String)">
+        <member name="M:TableMySQL.TableHandlerMySQL.SqlReadInTable(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.Windows.Forms.DataGridView@,System.Windows.Forms.DataGridViewAutoSizeColumnMode,System.String,System.String,System.Boolean)">
             <summary>
             Executes an SQL query to read data from a MySQL table and displays the result in a DataGridView control.
             </summary>
@@ -76,8 +77,9 @@
             <param name="mode">The auto-size mode for columns in the DataGridView.</param>
             <param name="connectionString">The connection string to the database.</param>
             <param name="query">The SQL query (default is "show databases").</param>
+            <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         </member>
-        <member name="M:TableMySQL.TableHandlerMySQL.NoLogSqlReadInTable(System.Windows.Forms.DataGridView@,System.Windows.Forms.DataGridViewAutoSizeColumnMode,System.String,System.String)">
+        <member name="M:TableMySQL.TableHandlerMySQL.NoLogSqlReadInTable(System.Windows.Forms.DataGridView@,System.Windows.Forms.DataGridViewAutoSizeColumnMode,System.String,System.String,System.Boolean)">
             <summary>
             Populates a DataGridView control with data from a SQL query without logging, using the specified connection string.
             </summary>
@@ -85,13 +87,14 @@
             <param name="mode">The DataGridViewAutoSizeColumnMode to be applied.</param>
             <param name="connectionString">The connection string for accessing the database.</param>
             <param name="query">The SQL query to retrieve data (default is "show databases").</param>
+            <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         </member>
         <member name="T:TableMySQL.OtherHandlerMySQL">
             <summary>
             Provides methods for handling database operations related to MySQL, including sending requests, testing connections, and connecting to databases.
             </summary>
         </member>
-        <member name="M:TableMySQL.OtherHandlerMySQL.SendRequest(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.String,System.String)">
+        <member name="M:TableMySQL.OtherHandlerMySQL.SendRequest(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,System.String,System.String,System.Boolean)">
             <summary>
             Sends a SQL request to the MySQL database and handles the response.
             </summary>
@@ -113,7 +116,7 @@
             </summary>
             <param name="connectionStr">The connection string to be tested.</param>
         </member>
-        <member name="M:TableMySQL.OtherHandlerMySQL.ConnectDatabase(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,TableMySQL.MyConnectionString@,System.String)">
+        <member name="M:TableMySQL.OtherHandlerMySQL.ConnectDatabase(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,TableMySQL.MyConnectionString@,System.String,System.Boolean)">
             <summary>
             Connects to the specified MySQL database using the provided connection string and handles success or failure.
             </summary>
@@ -156,12 +159,13 @@
             </summary>
             <param name="text">The text of the success message.</param>
         </member>
-        <member name="M:TableMySQL.ThisHandlerMySQL.Bad(System.String,System.String)">
+        <member name="M:TableMySQL.ThisHandlerMySQL.Bad(System.String,System.String,System.Boolean)">
             <summary>
             Displays an error message in the RichTextBox control with red text color and an optional error code.
             </summary>
             <param name="text">The text of the error message.</param>
             <param name="code">The error code (default is "none code").</param>
+            <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         </member>
         <member name="M:TableMySQL.ThisHandlerMySQL.GetFirstColumnAsArray(System.String,System.Boolean)">
             <summary>
@@ -171,14 +175,6 @@
             <param name="table">Determines whether the 'text' parameter is just the name of the table or the entire query</param>
             <returns>An array of strings representing the first column of the specified table or query</returns>
         </member>
-        <member name="M:TableMySQL.ThisHandlerMySQL.CreateContextFirstColumn(System.String,System.Boolean)">
-            <summary>
-            Creates a context menu strip based on the first column of the specified table.
-            </summary>
-            <param name="table">Name of the table</param>
-            /// <param name="tabled">Determines whether the 'text' parameter is just the name of the table or the entire query</param>
-            <returns>The created ContextMenuStrip</returns>
-        </member>
         <member name="M:TableMySQL.ThisHandlerMySQL.SqlReadInTable(System.Windows.Forms.DataGridView@,System.Windows.Forms.DataGridViewAutoSizeColumnMode,System.String,System.Boolean)">
             <summary>
             Executes an SQL query to read data from a MySQL table and displays the result in a DataGridView control.
@@ -186,13 +182,14 @@
             <param name="table">The DataGridView control to display the query results.</param>
             <param name="mode">The auto-size mode for columns in the DataGridView.</param>
             <param name="query">The SQL query to be executed (default is "show databases").</param>
-            <param name="columned">Determines if grid table row will have ContextMenuStrip with is SQL table columns</param>
+            <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         </member>
-        <member name="M:TableMySQL.ThisHandlerMySQL.SendRequest(System.String)">
+        <member name="M:TableMySQL.ThisHandlerMySQL.SendRequest(System.String,System.Boolean)">
             <summary>
             Sends an SQL request to the MySQL database using the current connection string and handles success or failure.
             </summary>
             <param name="query">The SQL query to be executed.</param>
+            /// <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         </member>
         <member name="M:TableMySQL.ThisHandlerMySQL.TestConnection(System.String)">
             <summary>
@@ -200,11 +197,12 @@
             </summary>
             <param name="connectionStr">The connection string to be tested.</param>
         </member>
-        <member name="M:TableMySQL.ThisHandlerMySQL.ConnectDatabase(System.String)">
+        <member name="M:TableMySQL.ThisHandlerMySQL.ConnectDatabase(System.String,System.Boolean)">
             <summary>
             Connects to the specified MySQL database using the provided database name and handles success or failure.
             </summary>
-            <param name="query">The input string containing the database name.</param>
+            <param name="query">Contains name of database connect to.</param>
+            <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         </member>
     </members>
 </doc>

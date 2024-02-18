@@ -91,10 +91,11 @@ namespace TableMySQL
         /// <param name="mainTextBox">The main RichTextBox control.</param>
         /// <param name="text">The text of the error message.</param>
         /// <param name="code">The error code (default is "none code").</param>
-        public static void Bad(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, string text, string code = "none code")
+        /// <param name="longError">If false then will show only first strike of error else all the text of an error</param>
+        public static void Bad(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, string text, string code = "none code", bool longError = false)
         {
             richTextBox.SelectionColor = Color.Red;
-            richTextBox.AppendText($"error code: {code}\n{text}\n");
+            richTextBox.AppendText("error code: " + code + '\n' + (longError ? text : text.Split('\n')[0]) + '\n');
             richTextBox.Focus();
             mainTextBox.Focus();
         }
@@ -108,9 +109,10 @@ namespace TableMySQL
         /// <param name="mode">The auto-size mode for columns in the DataGridView.</param>
         /// <param name="connectionString">The connection string to the database.</param>
         /// <param name="query">The SQL query (default is "show databases").</param>
+        /// <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         public static void SqlReadInTable(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, 
                                           ref DataGridView table, DataGridViewAutoSizeColumnMode mode,
-                                          string connectionString ,string query = "show databases")
+                                          string connectionString ,string query = "show databases", bool longError = false)
         {
             query = query.Replace('\n', ' ');
             try
@@ -165,7 +167,7 @@ namespace TableMySQL
                     Good(ref richTextBox, ref mainTextBox, query);
                 }
             }
-            catch (MySqlException error) { Bad(ref richTextBox, ref mainTextBox , error.ToString(), query); }
+            catch (MySqlException error) { Bad(ref richTextBox, ref mainTextBox , error.ToString(), query, longError); }
         }
 
         /// <summary>
@@ -175,11 +177,12 @@ namespace TableMySQL
         /// <param name="mode">The DataGridViewAutoSizeColumnMode to be applied.</param>
         /// <param name="connectionString">The connection string for accessing the database.</param>
         /// <param name="query">The SQL query to retrieve data (default is "show databases").</param>
+        /// <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         public static void NoLogSqlReadInTable(ref DataGridView table, DataGridViewAutoSizeColumnMode mode,
-                                               string connectionString, string query = "show databases")
+                                               string connectionString, string query = "show databases", bool longError = false)
         {
             var _0 = new RichTextBox();
-            SqlReadInTable(ref _0, ref _0, ref table, mode, connectionString, query);
+            SqlReadInTable(ref _0, ref _0, ref table, mode, connectionString, query, longError);
         }
     }
 
@@ -195,7 +198,7 @@ namespace TableMySQL
         /// <param name="mainTextBox">The main RichTextBox control.</param>
         /// <param name="connectionString">The connection string to the database.</param>
         /// <param name="query">The SQL query to be executed.</param>
-        public static void SendRequest(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, string connectionString, string query)
+        public static void SendRequest(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, string connectionString, string query, bool longError = false)
         {
             query = query.Replace('\n', ' ');
             if (!string.IsNullOrWhiteSpace(query))
@@ -211,10 +214,10 @@ namespace TableMySQL
                     connection.Close();
                     TableHandlerMySQL.Good(ref richTextBox, ref mainTextBox, query);
                 }
-                catch (MySqlException error) { TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, error.ToString(), query); }
+                catch (MySqlException error) { TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, error.ToString(), query, longError); }
             }
             else
-                TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, "Empty query", query);
+                TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, "Empty query", query, longError);
             }
 
         /// <summary>
@@ -246,7 +249,7 @@ namespace TableMySQL
         /// <param name="mainTextBox">The main RichTextBox control.</param>
         /// <param name="connectionString">The original connection string.</param>
         /// <param name="query">Contains the name of the database to connect to.</param>
-        public static void ConnectDatabase(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, ref MyConnectionString connectionString, string query)
+        public static void ConnectDatabase(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, ref MyConnectionString connectionString, string query, bool longError = false)
         {
             query = query.Replace('\n', ' ');
             string database = "";
@@ -274,7 +277,7 @@ namespace TableMySQL
             catch (MySqlException error)
             {
                 connectionString = oldconnstr;
-                TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, error.ToString(), "use " + database);
+                TableHandlerMySQL.Bad(ref richTextBox, ref mainTextBox, error.ToString(), "use " + database, longError);
             }
         }
     }
@@ -329,10 +332,11 @@ namespace TableMySQL
         /// </summary>
         /// <param name="text">The text of the error message.</param>
         /// <param name="code">The error code (default is "none code").</param>
-        public void Bad(string text, string code = "none code")
+        /// <param name="longError">If false then will show only first strike of error else all the text of an error</param>
+        public void Bad(string text, string code = "none code", bool longError = false)
         {
             RichTextBox.SelectionColor = Color.Red;
-            RichTextBox.AppendText($"error code: {code}\n{text}\n");
+            RichTextBox.AppendText("error code: " + code + '\n' + (longError ? text : text.Split('\n')[0]) + '\n');
             RichTextBox.Focus();
             MainTextBox.Focus();
         }
@@ -372,6 +376,7 @@ namespace TableMySQL
             return output.ToArray();
         }
 
+        /*
         /// <summary>
         /// Creates a context menu strip based on the first column of the specified table.
         /// </summary>
@@ -385,15 +390,16 @@ namespace TableMySQL
             context.Items.AddRange(firstCollumn);
             return context;
         }
-
+*/
         /// <summary>
         /// Executes an SQL query to read data from a MySQL table and displays the result in a DataGridView control.
         /// </summary>
         /// <param name="table">The DataGridView control to display the query results.</param>
         /// <param name="mode">The auto-size mode for columns in the DataGridView.</param>
         /// <param name="query">The SQL query to be executed (default is "show databases").</param>
-        /// <param name="columned">Determines if grid table row will have ContextMenuStrip with is SQL table columns</param>
-        public void SqlReadInTable(ref DataGridView table, DataGridViewAutoSizeColumnMode mode, string query = "show databases", bool columned = false)
+        /// <param name="longError">If false then will show only first strike of error else all the text of an error</param>
+        // lame <param name="columned">Determines if grid table row will have ContextMenuStrip with is SQL table columns</param>
+        public void SqlReadInTable(ref DataGridView table, DataGridViewAutoSizeColumnMode mode, string query = "show databases", bool longError = false)
         {
             query = query.Replace('\n', ' ');
             try
@@ -478,14 +484,15 @@ namespace TableMySQL
                     Good(query);
                 }
             }
-            catch (MySqlException error) { Bad(error.ToString(), query); }
+            catch (MySqlException error) { Bad(error.ToString(), query, longError); }
         }
 
         /// <summary>
         /// Sends an SQL request to the MySQL database using the current connection string and handles success or failure.
         /// </summary>
         /// <param name="query">The SQL query to be executed.</param>
-        public void SendRequest(string query)
+        /// /// <param name="longError">If false then will show only first strike of error else all the text of an error</param>
+        public void SendRequest(string query, bool longError = false)
         {
             query = query.Replace('\n', ' ');
             if (!string.IsNullOrWhiteSpace(query))
@@ -501,7 +508,7 @@ namespace TableMySQL
                     connection.Close();
                     Good(query);
                 }
-                catch (MySqlException error) { Bad(error.ToString(), query); }
+                catch (MySqlException error) { Bad(error.ToString(), query, longError); }
             }
             else
                 Bad("Empty query", query);
@@ -521,8 +528,9 @@ namespace TableMySQL
         /// <summary>
         /// Connects to the specified MySQL database using the provided database name and handles success or failure.
         /// </summary>
-        /// <param name="query">The input string containing the database name.</param>
-        public void ConnectDatabase(string query)
+        /// <param name="query">Contains name of database connect to.</param>
+        /// <param name="longError">If false then will show only first strike of error else all the text of an error</param>
+        public void ConnectDatabase(string query, bool longError = false)
         {
             query = query.Replace('\n', ' ');
 
@@ -550,12 +558,12 @@ namespace TableMySQL
             {
                 ConnectionString.Database = database;
                 TestConnection(ConnectionString.Get());
-                TableHandlerMySQL.Good(ref RichTextBox, ref MainTextBox, "use " + database);
+                Good("use " + database);
             }
             catch (MySqlException error)
             {
                 ConnectionString = oldconnstr;
-                TableHandlerMySQL.Bad(ref RichTextBox, ref MainTextBox, error.ToString(), "use " + database);
+                Bad(error.ToString(), "use " + database, longError);
             }
         }
     }
