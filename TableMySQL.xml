@@ -89,6 +89,14 @@
             <param name="query">The SQL query to retrieve data (default is "show databases").</param>
             <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         </member>
+        <member name="M:TableMySQL.TableHandlerMySQL.ColoredLog(System.Windows.Forms.RichTextBox@,System.Drawing.Color,System.String)">
+            <summary>
+            Just colored log in RichTextBox
+            </summary>
+            <param name="richTextBox">To where log to</param>
+            <param name="color">Color of logging text</param>
+            <param name="text">Text of log</param>
+        </member>
         <member name="T:TableMySQL.OtherHandlerMySQL">
             <summary>
             Provides methods for handling database operations related to MySQL, including sending requests, testing connections, and connecting to databases.
@@ -130,7 +138,7 @@
             Provides methods for handling database operations related to MySQL, including displaying messages in a RichTextBox control and executing SQL queries.
             </summary>
         </member>
-        <member name="F:TableMySQL.ThisHandlerMySQL.RichTextBox">
+        <member name="F:TableMySQL.ThisHandlerMySQL.LogTextBox">
             <summary>
             Box for logging
             </summary>
@@ -147,21 +155,21 @@
         </member>
         <member name="M:TableMySQL.ThisHandlerMySQL.#ctor(System.Windows.Forms.RichTextBox@,System.Windows.Forms.RichTextBox@,TableMySQL.MyConnectionString)">
             <summary>
-            Initializes a new instance of the ThisHandlerMySQL class with the specified RichTextBox controls and connection string.
+            Initializes a new instance of the ThisHandlerMySQL class with the specified LogTextBox controls and connection string.
             </summary>
-            <param name="richTextBox">The RichTextBox control for displaying information.</param>
-            <param name="mainTextBox">The main RichTextBox control.</param>
+            <param name="logTextBox">The RichTextBox control for displaying log information.</param>
+            <param name="mainTextBox">The main RichTextBox control for code.</param>
             <param name="connectionString">The connection string to the database.</param>
         </member>
         <member name="M:TableMySQL.ThisHandlerMySQL.Good(System.String)">
             <summary>
-            Displays a success message in the RichTextBox control with green text color.
+            Displays a success message in the LogTextBox control with green text color.
             </summary>
             <param name="text">The text of the success message.</param>
         </member>
         <member name="M:TableMySQL.ThisHandlerMySQL.Bad(System.String,System.String,System.Boolean)">
             <summary>
-            Displays an error message in the RichTextBox control with red text color and an optional error code.
+            Displays an error message in the LogTextBox control with red text color and an optional error code.
             </summary>
             <param name="text">The text of the error message.</param>
             <param name="code">The error code (default is "none code").</param>

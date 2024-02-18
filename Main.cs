@@ -184,6 +184,18 @@ namespace TableMySQL
             var _0 = new RichTextBox();
             SqlReadInTable(ref _0, ref _0, ref table, mode, connectionString, query, longError);
         }
+
+        /// <summary>
+        /// Just colored log in RichTextBox
+        /// </summary>
+        /// <param name="richTextBox">To where log to</param>
+        /// <param name="color">Color of logging text</param>
+        /// <param name="text">Text of log</param>
+        public static void ColoredLog(ref RichTextBox richTextBox, Color color, string text)
+        {
+            richTextBox.SelectionColor = color;
+            richTextBox.AppendText("log: " + text + '\n');
+        }
     }
 
     /// <summary>
@@ -290,7 +302,7 @@ namespace TableMySQL
         /// <summary>
         /// Box for logging
         /// </summary>
-        public RichTextBox RichTextBox;
+        public RichTextBox LogTextBox;
 
         /// <summary>
         /// Box for code of you
@@ -303,41 +315,41 @@ namespace TableMySQL
         public MyConnectionString ConnectionString;
 
         /// <summary>
-        /// Initializes a new instance of the ThisHandlerMySQL class with the specified RichTextBox controls and connection string.
+        /// Initializes a new instance of the ThisHandlerMySQL class with the specified LogTextBox controls and connection string.
         /// </summary>
-        /// <param name="richTextBox">The RichTextBox control for displaying information.</param>
-        /// <param name="mainTextBox">The main RichTextBox control.</param>
+        /// <param name="logTextBox">The RichTextBox control for displaying log information.</param>
+        /// <param name="mainTextBox">The main RichTextBox control for code.</param>
         /// <param name="connectionString">The connection string to the database.</param>
-        public ThisHandlerMySQL(ref RichTextBox richTextBox, ref RichTextBox mainTextBox, MyConnectionString connectionString)
+        public ThisHandlerMySQL(ref RichTextBox logTextBox, ref RichTextBox mainTextBox, MyConnectionString connectionString)
         {
-            RichTextBox = richTextBox;
+            LogTextBox = logTextBox;
             MainTextBox = mainTextBox;
             ConnectionString = connectionString;
         }
 
         /// <summary>
-        /// Displays a success message in the RichTextBox control with green text color.
+        /// Displays a success message in the LogTextBox control with green text color.
         /// </summary>
         /// <param name="text">The text of the success message.</param>
         public void Good(string text)
         {
-            RichTextBox.SelectionColor = Color.Green;
-            RichTextBox.AppendText("success: " + text + "\n");
-            RichTextBox.Focus();
+            LogTextBox.SelectionColor = Color.Green;
+            LogTextBox.AppendText("success: " + text + "\n");
+            LogTextBox.Focus();
             MainTextBox.Focus();
         }
 
         /// <summary>
-        /// Displays an error message in the RichTextBox control with red text color and an optional error code.
+        /// Displays an error message in the LogTextBox control with red text color and an optional error code.
         /// </summary>
         /// <param name="text">The text of the error message.</param>
         /// <param name="code">The error code (default is "none code").</param>
         /// <param name="longError">If false then will show only first strike of error else all the text of an error</param>
         public void Bad(string text, string code = "none code", bool longError = false)
         {
-            RichTextBox.SelectionColor = Color.Red;
-            RichTextBox.AppendText("error code: " + code + '\n' + (longError ? text : text.Split('\n')[0]) + '\n');
-            RichTextBox.Focus();
+            LogTextBox.SelectionColor = Color.Red;
+            LogTextBox.AppendText("error code: " + code + '\n' + (longError ? text : text.Split('\n')[0]) + '\n');
+            LogTextBox.Focus();
             MainTextBox.Focus();
         }
 
